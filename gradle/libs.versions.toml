@@ -23,6 +23,9 @@ androidx-core-testing = "2.2.0"
 kotlinx-coroutines-test = "1.7.3"
 mockito = "4.4.0"
 
+gradle-maven-publish = "0.28.0"
+jetbrains-dokka = "1.9.20"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-runtime-ktx" }
@@ -53,4 +56,5 @@ mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mo
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-
+gradle-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
+jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "jetbrains-dokka" }
