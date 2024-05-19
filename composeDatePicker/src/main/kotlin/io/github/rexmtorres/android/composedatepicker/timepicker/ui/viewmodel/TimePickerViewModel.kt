@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.composedatepicker.timepicker.data.Constant
-import com.composedatepicker.timepicker.data.model.TimePickerTime
-import com.composedatepicker.timepicker.enums.MinuteGap
-import com.composedatepicker.timepicker.ui.model.TimePickerUiState
+import io.github.rexmtorres.android.composedatepicker.timepicker.data.Constant
+import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.TimePickerTime
+import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
+import io.github.rexmtorres.android.composedatepicker.timepicker.ui.model.TimePickerUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 internal class TimePickerViewModel : ViewModel() {
 
@@ -60,15 +61,22 @@ internal class TimePickerViewModel : ViewModel() {
     fun updateUiState(
         timePickerTime: TimePickerTime,
         minuteGap: MinuteGap,
-        is24: Boolean
+        is24: Boolean,
+        locale: Locale
     ) {
-        _uiState.value = getUiStateTimeProvided(timePickerTime, minuteGap, is24)
+        _uiState.value = getUiStateTimeProvided(
+            timePickerTime = timePickerTime,
+            minuteGap = minuteGap,
+            is24 = is24,
+            locale = locale
+        )
     }
 
     fun getUiStateTimeProvided(
         timePickerTime: TimePickerTime,
         minuteGap: MinuteGap,
-        is24: Boolean
+        is24: Boolean,
+        locale: Locale
     ): TimePickerUiState {
 
         if (timePickerTime.hour < 0 || timePickerTime.hour > 23) {
@@ -88,7 +96,7 @@ internal class TimePickerViewModel : ViewModel() {
             selectedHourIndex = Constant.getMiddleOfHour(is24) + hour,
             minutes = Constant.getMinutes(minuteGap),
             selectedMinuteIndex = Constant.getMiddleOfMinute(minuteGap) + minute / minuteGap.gap,
-            timesOfDay = Constant.getTimesOfDay(),
+            timesOfDay = Constant.getTimesOfDay(locale = locale),
             selectedTimeOfDayIndex = if (hour in 12..23) 1 else 0
         )
     }

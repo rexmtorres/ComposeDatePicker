@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
-import com.composedatepicker.timepicker.data.DefaultTimePickerConfig
+import io.github.rexmtorres.android.composedatepicker.timepicker.data.DefaultTimePickerConfig
 
 class TimePickerConfiguration private constructor(
     val height: Dp,

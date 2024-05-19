@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
-import com.composedatepicker.datepicker.data.DefaultDatePickerConfig
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.DefaultDatePickerConfig
 
 class DatePickerConfiguration private constructor(
     val height: Dp,

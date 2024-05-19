@@ -1,23 +1,21 @@
 package io.github.rexmtorres.android.composedatepicker.datepicker.ui.viewmodel
 
-import android.icu.util.Calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.composedatepicker.datepicker.data.Constant
-import com.composedatepicker.datepicker.data.model.DatePickerDate
-import com.composedatepicker.datepicker.data.model.Month
-import com.composedatepicker.datepicker.ui.model.DatePickerUiState
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Constant
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.DatePickerDate
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Month
+import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 internal class DatePickerViewModel : ViewModel() {
-
     private var _uiState: MutableLiveData<DatePickerUiState> = MutableLiveData(DatePickerUiState())
     val uiState: LiveData<DatePickerUiState> = _uiState
     private lateinit var availableMonths: List<Month>
-
 
     init {
         uiState.value?.let {
@@ -118,6 +116,7 @@ internal class DatePickerViewModel : ViewModel() {
                 }
             }
         }
+
         _uiState.value = _uiState.value?.let {
             it.copy(
                 isMonthYearViewVisible = !it.isMonthYearViewVisible,
@@ -147,11 +146,13 @@ internal class DatePickerViewModel : ViewModel() {
         calendar[Calendar.MONTH] = date.month
 
         val maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
         if (date.day < 1) {
             throw IllegalArgumentException("Invalid day: ${date.day}, The day value must be greater than zero.")
         }
+
         if (date.day > maxDays) {
-            throw IllegalArgumentException("Invalid day: ${date.day}, The day value must be less than equal to $maxDays for given month (${Constant.getMonths()[date.month]}).")
+            throw IllegalArgumentException("Invalid day: ${date.day}, The day value must be less than equal to $maxDays for given month (${Constant.getMonthNames()[date.month]}).")
         }
 
         val index = Constant.years.indexOf(date.year)

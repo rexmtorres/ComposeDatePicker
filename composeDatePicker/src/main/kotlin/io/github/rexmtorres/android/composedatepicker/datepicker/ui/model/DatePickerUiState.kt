@@ -1,9 +1,8 @@
 package io.github.rexmtorres.android.composedatepicker.datepicker.ui.model
 
-import com.composedatepicker.datepicker.data.Constant
-import com.composedatepicker.datepicker.data.model.Month
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Constant
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Month
 import java.util.Calendar
-import kotlin.streams.toList
 
 internal data class DatePickerUiState(
     val selectedYear: Int = Calendar.getInstance()[Calendar.YEAR],
@@ -12,7 +11,7 @@ internal data class DatePickerUiState(
     val selectedMonthIndex: Int = Constant.getMiddleOfMonth() + selectedMonth.number,
     val currentVisibleMonth: Month = selectedMonth,
     val selectedDayOfMonth: Int = Calendar.getInstance()[Calendar.DAY_OF_MONTH],
-    val years: List<String> = Constant.years.stream().map { "$it" }.toList(),
-    val months: List<String> = Constant.getMonths(),
+    val years: List<String> = Constant.years.map { "$it" }.toList(),
+    val months: List<String> = Constant.getMonthNames(),
     val isMonthYearViewVisible: Boolean = false
 )

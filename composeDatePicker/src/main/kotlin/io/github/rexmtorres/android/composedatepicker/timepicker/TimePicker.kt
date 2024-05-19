@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,32 +32,37 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.composedatepicker.extension.noRippleClickable
-import com.composedatepicker.extension.toDp
-import com.composedatepicker.theme.Size.extraLarge
-import com.composedatepicker.theme.Size.medium
-import com.composedatepicker.timepicker.data.model.TimePickerTime
-import com.composedatepicker.timepicker.enums.MinuteGap
-import com.composedatepicker.timepicker.ui.model.TimePickerConfiguration
-import com.composedatepicker.timepicker.ui.viewmodel.TimePickerViewModel
+import io.github.rexmtorres.android.composedatepicker.component.SwipeLazyColumn
+import io.github.rexmtorres.android.composedatepicker.extension.noRippleClickable
+import io.github.rexmtorres.android.composedatepicker.extension.toDp
+import io.github.rexmtorres.android.composedatepicker.theme.Size.extraLarge
+import io.github.rexmtorres.android.composedatepicker.theme.Size.medium
+import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.TimePickerTime
+import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.toDate
+import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
+import io.github.rexmtorres.android.composedatepicker.timepicker.ui.model.TimePickerConfiguration
+import io.github.rexmtorres.android.composedatepicker.timepicker.ui.viewmodel.TimePickerViewModel
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun TimePicker(
     modifier: Modifier = Modifier,
-    onTimeSelected: (Int, Int) -> Unit,
     is24Hour: Boolean? = null,
     minuteGap: MinuteGap = MinuteGap.ONE,
     time: TimePickerTime? = null,
     configuration: TimePickerConfiguration = TimePickerConfiguration.Builder().build(),
-    id: Int = 1
+    id: Int = 1,
+    locale: Locale = Locale.getDefault(),
+    onTimeSelected: (hour: Int, minute: Int) -> Unit,
 ) {
     val viewModel: TimePickerViewModel = viewModel(key = "TimePickerViewModel$id")
-    val timePickerTime = time ?: TimePickerTime.getTime()
+    val timePickerTime = time ?: TimePickerTime.currentTime
     val is24: Boolean = is24Hour ?: DateFormat.is24HourFormat(LocalContext.current)
-    val timePickerUiState = viewModel.getUiStateTimeProvided(timePickerTime, minuteGap, is24)
+    val timePickerUiState = viewModel.getUiStateTimeProvided(timePickerTime, minuteGap, is24, locale)
     val uiState by viewModel.uiState.observeAsState(timePickerUiState)
-    LaunchedEffect(key1 = Unit) { viewModel.updateUiState(timePickerTime, minuteGap, is24) }
+
+    LaunchedEffect(key1 = Unit) { viewModel.updateUiState(timePickerTime, minuteGap, is24, locale) }
 
     TimePickerView(
         modifier = modifier,
@@ -178,7 +185,8 @@ private fun SwipeLazyColumn(
     val coroutineScope = rememberCoroutineScope()
     var isAutoScrolling by remember { mutableStateOf(false) }
     val listState = rememberLazyListState(selectedIndex)
-    com.composedatepicker.component.SwipeLazyColumn(
+
+    SwipeLazyColumn(
         modifier = modifier,
         selectedIndex = selectedIndex,
         onSelectedIndexChange = onSelectedIndexChange,
@@ -194,6 +202,7 @@ private fun SwipeLazyColumn(
     ) {
         // we add some empty rows at the beginning and end of list to make it feel that it is a center focused list
         val count = items.size + configuration.numberOfTimeRowsDisplayed - 1
+
         items(count) {
             SliderItem(
                 value = it,
@@ -231,7 +240,16 @@ private fun SliderItem(
     // this gap variable helps in maintaining list as center focused list
     val gap = configuration.numberOfTimeRowsDisplayed / 2
     val isSelected = value == selectedIndex + gap
-    val scale by animateFloatAsState(targetValue = if (isSelected) configuration.selectedTimeScaleFactor else 1f)
+
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) {
+            configuration.selectedTimeScaleFactor
+        } else {
+            1f
+        },
+        label = "SliderItem.scale"
+    )
+
     Box(
         modifier = Modifier
             .height(height / configuration.numberOfTimeRowsDisplayed)
@@ -251,7 +269,11 @@ private fun SliderItem(
                     modifier = Modifier
                         .align(alignment)
                         .scale(scale),
-                    style = if (isSelected) configuration.selectedTimeTextStyle else configuration.timeTextStyle,
+                    style = if (isSelected) {
+                        configuration.selectedTimeTextStyle
+                    } else {
+                        configuration.timeTextStyle
+                    },
                     textAlign = textAlign
                 )
             }
@@ -262,5 +284,56 @@ private fun SliderItem(
 @Preview
 @Composable
 fun PreviewTimePicker() {
-    TimePicker(onTimeSelected = { _: Int, _: Int -> })
+    var currentTime by remember {
+        mutableStateOf(TimePickerTime.currentTime)
+    }
+
+    var confirmed by remember {
+        mutableStateOf(false)
+    }
+
+    if (!confirmed) {
+        AlertDialog(
+            onDismissRequest = { /*TODO*/ },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        confirmed = true
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            },
+            text = {
+                TimePicker(
+                    locale = Locale.CHINESE,
+                    is24Hour = false,
+                    minuteGap = MinuteGap.THIRTY,
+                    time = currentTime,
+                    onTimeSelected = { hour, minute ->
+                        currentTime = TimePickerTime(
+                            hour = hour,
+                            minute = minute
+                        )
+                    }
+                )
+            }
+        )
+    } else {
+        AlertDialog(
+            onDismissRequest = { /*TODO*/ },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        confirmed = false
+                    }
+                ) {
+                    Text(text = "Close")
+                }
+            },
+            text = {
+                Text(text = "Time: ${currentTime.toDate(discardDate = true)}")
+            }
+        )
+    }
 }

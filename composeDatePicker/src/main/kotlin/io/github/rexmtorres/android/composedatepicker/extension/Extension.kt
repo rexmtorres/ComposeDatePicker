@@ -3,6 +3,8 @@ package io.github.rexmtorres.android.composedatepicker.extension
 import android.content.res.Resources
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -18,7 +20,8 @@ fun Int.isLeapYear(): Boolean {
     return this % 4 == 0 && (this % 100 != 0 || this % 400 == 0)
 }
 
-fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Modifier = composed {
+@Composable
+fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Modifier = this.then(
     clickable(
         indication = null,
         interactionSource = remember { MutableInteractionSource() },
@@ -26,7 +29,7 @@ fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Mo
     ) {
         onClick()
     }
-}
+)
 
 fun Calendar.isEqual(calendar: Calendar?): Boolean {
     calendar?.let {

@@ -1,19 +1,19 @@
 package io.github.rexmtorres.android.composedatepicker.datepicker.data
 
-import com.composedatepicker.datepicker.enums.Days
-import com.composedatepicker.datepicker.enums.Days.FRIDAY
-import com.composedatepicker.datepicker.enums.Days.MONDAY
-import com.composedatepicker.datepicker.enums.Days.SATURDAY
-import com.composedatepicker.datepicker.enums.Days.SUNDAY
-import com.composedatepicker.datepicker.enums.Days.THURSDAY
-import com.composedatepicker.datepicker.enums.Days.TUESDAY
-import com.composedatepicker.datepicker.enums.Days.WEDNESDAY
-import com.composedatepicker.datepicker.data.model.Month
-import com.composedatepicker.extension.isLeapYear
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Month
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.FRIDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.MONDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.SATURDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.SUNDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.THURSDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.TUESDAY
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days.WEDNESDAY
+import io.github.rexmtorres.android.composedatepicker.extension.isLeapYear
 import java.util.Calendar
+import java.util.Locale
 
 internal object Constant {
-    private const val repeatCount: Int = 200
+    private const val REPEAT_COUNT: Int = 200
 
     val days = listOf(
         SUNDAY,
@@ -25,47 +25,101 @@ internal object Constant {
         SATURDAY
     )
 
-    private val monthNames = listOf(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    )
+    val years = List(REPEAT_COUNT) {
+        it + Calendar.getInstance()[Calendar.YEAR] - (REPEAT_COUNT / 2)
+    }
 
-    fun getMonths(): List<String> {
-        val list = mutableListOf<String>()
-        for (i in 1..repeatCount) {
-            list.addAll(monthNames)
-        }
-        return list
+    fun getMonthNames(
+        locale: Locale = Locale.getDefault()
+    ): List<String> {
+        val months = getMonthNameMap(locale = locale).map { (_, name) -> name }
+
+        return List(REPEAT_COUNT) { months }.flatten()
     }
 
     fun getMiddleOfMonth(): Int {
-        return 12 * (repeatCount / 2)
+        return 12 * (REPEAT_COUNT / 2)
     }
 
-    fun getMonths(year: Int): List<Month> {
+    fun getMonths(
+        year: Int,
+        locale: Locale = Locale.getDefault()
+    ): List<Month> {
+        val months = getMonthNameMap(locale = locale)
+
         return listOf(
-            Month("January", 31, getFirstDayOfMonth(0, year), 0),
-            Month("February", if (year.isLeapYear()) 29 else 28, getFirstDayOfMonth(1, year), 1),
-            Month("March", 31, getFirstDayOfMonth(2, year), 2),
-            Month("April", 30, getFirstDayOfMonth(3, year), 3),
-            Month("May", 31, getFirstDayOfMonth(4, year), 4),
-            Month("June", 30, getFirstDayOfMonth(5, year), 5),
-            Month("July", 31, getFirstDayOfMonth(6, year), 6),
-            Month("August", 31, getFirstDayOfMonth(7, year), 7),
-            Month("September", 30, getFirstDayOfMonth(8, year), 8),
-            Month("October", 31, getFirstDayOfMonth(9, year), 9),
-            Month("November", 30, getFirstDayOfMonth(10, year), 10),
-            Month("December", 31, getFirstDayOfMonth(11, year), 11)
+            Month(
+                name = months[Calendar.JANUARY]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.JANUARY, year),
+                number = Calendar.JANUARY
+            ),
+            Month(
+                name = months[Calendar.FEBRUARY]!!,
+                numberOfDays = if (year.isLeapYear()) 29 else 28,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.FEBRUARY, year),
+                number = Calendar.FEBRUARY
+            ),
+            Month(
+                name = months[Calendar.MARCH]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.MARCH, year),
+                number = Calendar.MARCH
+            ),
+            Month(
+                name = months[Calendar.APRIL]!!,
+                numberOfDays = 30,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.APRIL, year),
+                number = Calendar.APRIL
+            ),
+            Month(
+                name = months[Calendar.MAY]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.MAY, year),
+                number = Calendar.MAY
+            ),
+            Month(
+                name = months[Calendar.JUNE]!!,
+                numberOfDays = 30,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.JUNE, year),
+                number = Calendar.JUNE
+            ),
+            Month(
+                name = months[Calendar.JULY]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.JULY, year),
+                number = Calendar.JULY
+            ),
+            Month(
+                name = months[Calendar.AUGUST]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.AUGUST, year),
+                number = Calendar.AUGUST
+            ),
+            Month(
+                name = months[Calendar.SEPTEMBER]!!,
+                numberOfDays = 30,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.SEPTEMBER, year),
+                number = Calendar.SEPTEMBER
+            ),
+            Month(
+                name = months[Calendar.OCTOBER]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.OCTOBER, year),
+                number = Calendar.OCTOBER
+            ),
+            Month(
+                name = months[Calendar.NOVEMBER]!!,
+                numberOfDays = 30,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.NOVEMBER, year),
+                number = Calendar.NOVEMBER
+            ),
+            Month(
+                name = months[Calendar.DECEMBER]!!,
+                numberOfDays = 31,
+                firstDayOfMonth = getFirstDayOfMonth(Calendar.DECEMBER, year),
+                number = Calendar.DECEMBER
+            )
         )
     }
 
@@ -75,5 +129,15 @@ internal object Constant {
         return Days.get(calendar[Calendar.DAY_OF_WEEK])
     }
 
-    val years = List(200) { it + Calendar.getInstance()[Calendar.YEAR] - 100 }
+    private fun getMonthNameMap(
+        locale: Locale = Locale.getDefault()
+    ): Map<Int, String> = Calendar.getInstance().getDisplayNames(
+        Calendar.MONTH,
+        Calendar.LONG,
+        locale
+    )?.map { (name, value) ->
+        value to name
+    }?.sortedBy { (value, _) ->
+        value
+    } ?.toMap() ?: throw IllegalStateException("Failed to get month names")
 }
