@@ -78,11 +78,13 @@ fun DatePicker(
     onDateSelected: (year: Int, month: Int, day: Int) -> Unit,
 ) {
     val viewModel: DatePickerViewModel = viewModel(key = "DatePickerViewModel$id")
+    viewModel.setLocale(locale)
 
     val uiState by viewModel.uiState.observeAsState(
         DatePickerUiState(
+            locale = locale,
             selectedYear = date.year,
-            selectedMonth = Constant.getMonths(date.year)[date.month],
+            selectedMonth = Constant.getMonths(date.year, locale)[date.month],
             selectedDayOfMonth = date.day
         )
     )

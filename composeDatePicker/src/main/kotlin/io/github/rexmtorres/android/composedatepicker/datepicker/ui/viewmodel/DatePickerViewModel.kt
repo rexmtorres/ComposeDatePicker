@@ -11,15 +11,38 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Locale
 
 internal class DatePickerViewModel : ViewModel() {
     private var _uiState: MutableLiveData<DatePickerUiState> = MutableLiveData(DatePickerUiState())
     val uiState: LiveData<DatePickerUiState> = _uiState
-    private lateinit var availableMonths: List<Month>
+
+    private var _availableMonths: List<Month> = emptyList()
+    private val availableMonths: List<Month>
+        get() = _availableMonths
 
     init {
-        uiState.value?.let {
-            availableMonths = Constant.getMonths(it.selectedYear)
+        uiState.value?.also {
+            _availableMonths = Constant.getMonths(
+                year = it.selectedYear,
+                locale = it.locale
+            )
+        }
+    }
+
+    fun setLocale(locale: Locale) {
+        _uiState.value?.apply {
+            _availableMonths = Constant.getMonths(
+                year = selectedYear,
+                locale = locale
+            )
+
+            _uiState.value = this.copy(
+                locale = locale,
+                months = Constant.getMonthNames(locale = locale),
+                currentVisibleMonth = availableMonths[currentVisibleMonth.number],
+                selectedMonth = Constant.getMonths(selectedYear, locale)[selectedMonth.number]
+            )
         }
     }
 
@@ -56,7 +79,7 @@ internal class DatePickerViewModel : ViewModel() {
                 val nextYearIndex = selectedYearIndex + 1
                 if (nextYearIndex == years.size) return
                 val nextYear = years[nextYearIndex].toInt()
-                availableMonths = Constant.getMonths(nextYear)
+                _availableMonths = Constant.getMonths(nextYear, locale)
                 _uiState.value = _uiState.value?.copy(
                     selectedYear = nextYear,
                     selectedYearIndex = nextYearIndex,
@@ -78,7 +101,7 @@ internal class DatePickerViewModel : ViewModel() {
                 val previousYearIndex = selectedYearIndex - 1
                 if (previousYearIndex == -1) return
                 val previousYear = years[previousYearIndex].toInt()
-                availableMonths = Constant.getMonths(previousYear)
+                _availableMonths = Constant.getMonths(previousYear, locale)
                 _uiState.value = _uiState.value?.copy(
                     selectedYear = previousYear,
                     selectedYearIndex = previousYearIndex,
@@ -97,12 +120,15 @@ internal class DatePickerViewModel : ViewModel() {
     private fun getAdjustedSelectedMonthIndex(index: Int) = Constant.getMiddleOfMonth() + index % 12
 
     fun updateSelectedYearIndex(index: Int) {
-        availableMonths = Constant.getMonths(Constant.years[index])
-        _uiState.value = _uiState.value?.copy(
-            selectedYearIndex = index,
-            selectedYear = Constant.years[index],
-            currentVisibleMonth = availableMonths[_uiState.value?.currentVisibleMonth?.number ?: 0]
-        )
+        _uiState.value?.apply {
+            _availableMonths = Constant.getMonths(Constant.years[index], locale)
+
+            _uiState.value = _uiState.value?.copy(
+                selectedYearIndex = index,
+                selectedYear = Constant.years[index],
+                currentVisibleMonth = availableMonths[_uiState.value?.currentVisibleMonth?.number ?: 0]
+            )
+        }
     }
 
     fun toggleIsMonthYearViewVisible() {

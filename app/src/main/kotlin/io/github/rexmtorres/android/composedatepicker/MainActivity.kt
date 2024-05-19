@@ -82,7 +82,7 @@ private fun Content(modifier: Modifier = Modifier) {
         Text(text = selectedDate)
 
         DatePicker(
-            locale = Locale.JAPANESE,
+            locale = Locale.CHINESE,
             selectionLimiter = SelectionLimiter(
                 fromDate = DatePickerDate.currentDate,
                 //toDate = DatePickerDate.currentDate.addDays(4)
