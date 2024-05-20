@@ -8,9 +8,14 @@ import java.util.Date
 /**
  * Represents the time used by [TimePicker][io.github.rexmtorres.android.composedatepicker.timepicker.TimePicker].
  *
- * There are several extension functions to convert between [TimePickerTime] and [Calendar] and
- * [Date].  Please see [Calendar.toTimePickerTime], [Date.toTimePickerTime],
- * [Long.millisToTimePickerTime], [TimePickerTime.toCalendar], [TimePickerTime.toDate].
+ * There are several extension functions to convert between [TimePickerTime] and [Calendar],  [Date]
+ * and [Long].  Please refer to the following extensions:
+ * - [Calendar.toTimePickerTime]
+ * - [Date.toTimePickerTime]
+ * - [Long.millisToTimePickerTime]
+ * - [TimePickerTime.toCalendar]
+ * - [TimePickerTime.toDate]
+ * - [TimePickerTime.toMillis]
  *
  * There are also extension functions to add hours and minutes to a [TimePickerTime].
  * Please see [TimePickerTime.addHours], [TimePickerTime.addMinutes].
@@ -88,6 +93,16 @@ fun TimePickerTime.toCalendar(
 fun TimePickerTime.toDate(
     discardDate: Boolean = false
 ): Date = toCalendar(discardDate = discardDate).time
+
+/**
+ * Converts a [TimePickerTime] to a [Long], representing the time in milliseconds.
+ *
+ * @param discardDate If true, the date part of the resulting time representation will be discarded.
+ * Else, it will be set to the current date.
+ */
+fun TimePickerTime.toMillis(
+    discardDate: Boolean = false
+): Long = toDate(discardDate = discardDate).time
 
 /**
  * Returns a new [TimePickerTime] with the specified [hours] added.

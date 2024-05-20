@@ -8,9 +8,14 @@ import java.util.Date
 /**
  * Represents the date used by [DatePicker][io.github.rexmtorres.android.composedatepicker.datepicker.DatePicker].
  *
- * There are several extension functions to convert between [DatePickerDate] and [Calendar] and
- * [Date].  Please see [Calendar.toDatePickerDate], [Date.toDatePickerDate],
- * [Long.millisToDatePickerDate], [DatePickerDate.toCalendar], [DatePickerDate.toDate].
+ * There are several extension functions to convert between [DatePickerDate] and [Calendar], [Date]
+ * and [Long] (date in milliseconds).  Please refer to the following extensions:
+ * - [Calendar.toDatePickerDate]
+ * - [Date.toDatePickerDate]
+ * - [Long.millisToDatePickerDate]
+ * - [DatePickerDate.toCalendar]
+ * - [DatePickerDate.toDate]
+ * - [DatePickerDate.toMillis]
  *
  * There are also extension functions to add days, months and years to a [DatePickerDate].
  * Please see [DatePickerDate.addDays], [DatePickerDate.addMonths], [DatePickerDate.addYears].
@@ -91,6 +96,16 @@ fun DatePickerDate.toCalendar(
 fun DatePickerDate.toDate(
     discardTime: Boolean = false
 ): Date = toCalendar(discardTime = discardTime).time
+
+/**
+ * Converts a [DatePickerDate] to a [Long], representing the date in milliseconds.
+ *
+ * @param discardTime If true, the time part of the resulting date representation will be discarded.
+ * Else, it will be set to the current time.
+ */
+fun DatePickerDate.toMillis(
+    discardTime: Boolean = false
+): Long = toDate(discardTime = discardTime).time
 
 /**
  * Returns a new [DatePickerDate] with the specified [days] added.
