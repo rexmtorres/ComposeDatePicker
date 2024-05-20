@@ -179,8 +179,33 @@ TimePicker(
 ![TimePicker Screenshot 02](doc/time_picker_03.png)
 
 
+## Utility Extensions
+
+[DatePickerDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/-date-picker-date/index.html) and [TimePickerTime](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/-time-picker-time/index.html) have several extension functions to convert between [Date](https://developer.android.com/reference/kotlin/java/util/Date.html), [Calendar](https://developer.android.com/reference/kotlin/java/util/Calendar.html) and [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) (date/time representation in milliseconds).  There are also extension functions to add days/months/years to a DatePickerDate instance as well as add minutes/hours to a TimePickerTime instance.
+
+* [DatePickerDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/-date-picker-date/index.html) extension functions:
+  - [addDays](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/add-days.html)
+  - [addMonths](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/add-months.html)
+  - [millisToDatePickerDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/millis-to-date-picker-date.html)
+  - [toCalendar](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/to-calendar.html)
+  - [toDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/to-date.html)
+  - [toDatePickerDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/to-date-picker-date.html)
+  - [toMillis](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.data.model/to-millis.html)
+
+* [TimePickerTime](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/-time-picker-time/index.html) extension functions:
+  - [addHours](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/add-hours.html)
+  - [addMinutes](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/add-minutes.html)
+  - [millisToTimePickerTime](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/millis-to-time-picker-time.html)
+  - [toCalendar](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/to-calendar.html)
+  - [toDate](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/to-date.html)
+  - [toMillis](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/to-millis.html)
+  - [toTimePickerTime](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.data.model/to-time-picker-time.html)
+
+Please refer to the full [documentation here](doc/dokka/index.html).
+
+
 ## Troubleshot
 
 * If multiple date/time pickers are used, a unique **_id_** parameter should be included in the function call for each composable.
 
-* When adjusting the height of a date/time picker, it is recommended to use **_TimePickerConfiguration.Builder().height()_** instead of **_Modifier.height()_** to ensure smooth rendering.
+* When adjusting the height of a date/time picker, it is recommended to use [**_DatePickerConfiguration.Builder().height()_**](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.datepicker.ui.model/-date-picker-configuration/-builder/height.html) and [**_TimePickerConfiguration.Builder().height()_**](doc/dokka/compose-date-picker/io.github.rexmtorres.android.composedatepicker.timepicker.ui.model/-time-picker-configuration/-builder/height.html) instead of **_Modifier.height()_** to ensure smooth rendering.
