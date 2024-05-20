@@ -5,7 +5,25 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import io.github.rexmtorres.android.composedatepicker.timepicker.data.DefaultTimePickerConfig
+import io.github.rexmtorres.android.composedatepicker.timepicker.ui.model.TimePickerConfiguration.Builder
 
+/**
+ * Additional configurations for customizing the appearance of the date picker.
+ *
+ * Use [Builder] to create a builder instance and then call [Builder.build] to create the instance
+ * of this class.
+ *
+ * See [DefaultTimePickerConfig] for the default configurations.
+ *
+ * @property height The height of the time picker.
+ * @property timeTextStyle The text style for the time text.
+ * @property selectedTimeTextStyle The text style for the selected time text.
+ * @property numberOfTimeRowsDisplayed The number of rows of time to display.
+ * @property selectedTimeScaleFactor The scale factor for the selected time area.
+ * @property selectedTimeAreaHeight The height of the selected time area.
+ * @property selectedTimeAreaColor The color of the selected time area.
+ * @property selectedTimeAreaShape The shape of the selected time area.
+ */
 class TimePickerConfiguration private constructor(
     val height: Dp,
     val timeTextStyle: TextStyle,

@@ -45,29 +45,43 @@ import io.github.rexmtorres.android.composedatepicker.timepicker.ui.viewmodel.Ti
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+/**
+ * Composes a time picker.
+ *
+ * @param modifier [Modifier] to be applied to the time picker.
+ * @param is24Hour Whether to use 24-hour format or not.
+ * @param uppercaseAmPm Whether to capitalize AM/PM or not.
+ * @param minuteGap The gap between minutes.
+ * @param time The initial time.
+ * @param configuration [TimePickerConfiguration] that controls the appearance of the date picker.
+ * @param id Unique identifier for the time picker.  This is important when displaying multiple
+ * time pickers in the same screen.
+ * @param locale The locale to use for displaying the AM/PM text.
+ * @param onTimeSelected Callback when the time is selected.
+ */
 @Composable
 fun TimePicker(
     modifier: Modifier = Modifier,
     is24Hour: Boolean? = null,
+    uppercaseAmPm: Boolean = false,
     minuteGap: MinuteGap = MinuteGap.ONE,
-    time: TimePickerTime? = null,
+    time: TimePickerTime = TimePickerTime.currentTime,
     configuration: TimePickerConfiguration = TimePickerConfiguration.Builder().build(),
     id: Int = 1,
     locale: Locale = Locale.getDefault(),
-    onTimeSelected: (hour: Int, minute: Int) -> Unit,
+    onTimeSelected: (TimePickerTime) -> Unit,
 ) {
     val viewModel: TimePickerViewModel = viewModel(key = "TimePickerViewModel$id")
-    val timePickerTime = time ?: TimePickerTime.currentTime
+    viewModel.setLocale(locale)
+
     val is24: Boolean = is24Hour ?: DateFormat.is24HourFormat(LocalContext.current)
-    val timePickerUiState = viewModel.getUiStateTimeProvided(timePickerTime, minuteGap, is24, locale)
+    val timePickerUiState =
+        viewModel.getUiStateTimeProvided(time, minuteGap, is24, locale)
     val uiState by viewModel.uiState.observeAsState(timePickerUiState)
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.updateUiState(timePickerTime, minuteGap, is24, locale)
-
-        viewModel.getSelectedTime()?.apply {
-            onTimeSelected(hour, minute)
-        }
+        viewModel.updateUiState(time, minuteGap, is24, locale)
+        viewModel.getSelectedTime()?.also(onTimeSelected)
     }
 
     TimePickerView(
@@ -83,6 +97,8 @@ fun TimePicker(
             viewModel.updateSelectedMinuteIndex(it)
         },
         timesOfDay = uiState.timesOfDay,
+        capitalizeTimesOfDay = uppercaseAmPm,
+        locale = locale,
         selectedTimeOfDayIndex = uiState.selectedTimeOfDayIndex,
         onSelectedTimeOfDayIndexChange = {
             viewModel.updateSelectedTimeOfDayIndex(it)
@@ -90,9 +106,7 @@ fun TimePicker(
         is24Hour = uiState.is24Hour,
         configuration = configuration,
         onScrollingStopped = {
-            viewModel.getSelectedTime()?.apply {
-                onTimeSelected(hour, minute)
-            }
+            viewModel.getSelectedTime()?.also(onTimeSelected)
         }
     )
 }
@@ -107,6 +121,8 @@ private fun TimePickerView(
     selectedMinuteIndex: Int,
     onSelectedMinuteIndexChange: (Int) -> Unit,
     timesOfDay: List<String>,
+    capitalizeTimesOfDay: Boolean,
+    locale: Locale,
     selectedTimeOfDayIndex: Int,
     onSelectedTimeOfDayIndexChange: (Int) -> Unit,
     is24Hour: Boolean,
@@ -114,6 +130,15 @@ private fun TimePickerView(
     onScrollingStopped: () -> Unit,
 ) {
     var height by remember { mutableStateOf(configuration.height) }
+
+    val ampm = remember(timesOfDay, capitalizeTimesOfDay, locale) {
+        if (capitalizeTimesOfDay) {
+            timesOfDay.map { it.uppercase(locale) }
+        } else {
+            timesOfDay.map { it.lowercase(locale) }
+        }
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -147,6 +172,7 @@ private fun TimePickerView(
                 height = height,
                 onScrollingStopped = onScrollingStopped
             )
+
             SwipeLazyColumn(
                 modifier = Modifier.weight(if (is24Hour) 0.5f else 0.2f),
                 selectedIndex = selectedMinuteIndex,
@@ -158,12 +184,13 @@ private fun TimePickerView(
                 height = height,
                 onScrollingStopped = onScrollingStopped
             )
+
             if (!is24Hour) {
                 SwipeLazyColumn(
                     modifier = Modifier.weight(0.4f),
                     selectedIndex = selectedTimeOfDayIndex,
                     onSelectedIndexChange = onSelectedTimeOfDayIndexChange,
-                    items = timesOfDay,
+                    items = ampm,
                     alignment = Alignment.CenterStart,
                     configuration = configuration,
                     height = height,
@@ -312,15 +339,12 @@ fun PreviewTimePicker() {
             },
             text = {
                 TimePicker(
-                    locale = Locale.CHINESE,
                     is24Hour = false,
                     minuteGap = MinuteGap.THIRTY,
                     time = currentTime,
-                    onTimeSelected = { hour, minute ->
-                        currentTime = TimePickerTime(
-                            hour = hour,
-                            minute = minute
-                        )
+                    uppercaseAmPm = true,
+                    onTimeSelected = { time ->
+                        currentTime = time
                     }
                 )
             }

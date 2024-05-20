@@ -3,8 +3,10 @@ package io.github.rexmtorres.android.composedatepicker.timepicker.ui.model
 import io.github.rexmtorres.android.composedatepicker.timepicker.data.Constant
 import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
 import java.util.Calendar
+import java.util.Locale
 
 internal data class TimePickerUiState(
+    val locale: Locale = Locale.getDefault(),
     val is24Hour: Boolean = false,
     val minuteGap: MinuteGap = MinuteGap.FIVE,
     val hours: List<String> = Constant.getHours(is24Hour),
@@ -26,7 +28,7 @@ internal data class TimePickerUiState(
                 minute = Calendar.getInstance()[Calendar.MINUTE],
                 minuteGap = minuteGap
             ) / minuteGap.gap,
-    val timesOfDay: List<String> = Constant.getTimesOfDay(),
+    val timesOfDay: List<String> = Constant.getTimesOfDay(locale),
     val selectedTimeOfDayIndex: Int =
         if (
             (

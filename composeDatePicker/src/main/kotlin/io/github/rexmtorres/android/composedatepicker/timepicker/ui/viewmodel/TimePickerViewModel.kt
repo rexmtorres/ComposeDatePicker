@@ -13,14 +13,32 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 internal class TimePickerViewModel : ViewModel() {
-
     private val _uiState: MutableLiveData<TimePickerUiState> = MutableLiveData(TimePickerUiState())
     val uiState: LiveData<TimePickerUiState> = _uiState
-    private var hour: Int =
-        0 // When time of the day is manually selected by user we either add or subtract this
+
+    // When time of the day is manually selected by user we either add or subtract this
+    private var hour: Int = 0
+
+    fun setLocale(locale: Locale) {
+        _uiState.value?.apply {
+            _uiState.value = this.copy(
+                locale = locale,
+                timesOfDay = Constant.getTimesOfDay(locale = locale),
+            )
+
+            _uiState.value?.selectedTimeOfDayIndex?.also { index ->
+                hour += if (index == 1) {
+                    12
+                } else {
+                    -12
+                }
+            }
+        }
+    }
 
     fun updateSelectedHourIndex(index: Int) {
         _uiState.value = _uiState.value?.copy(selectedHourIndex = index)
+
         _uiState.value?.apply {
             if (!is24Hour) {
                 viewModelScope.launch {
@@ -90,6 +108,7 @@ internal class TimePickerViewModel : ViewModel() {
         val hour: Int = timePickerTime.hour + if(minute == 0 && timePickerTime.minute != 0) 1 else 0
 
         return TimePickerUiState(
+            locale = locale,
             is24Hour = is24,
             minuteGap = minuteGap,
             hours = Constant.getHours(is24),

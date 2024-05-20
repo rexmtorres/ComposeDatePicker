@@ -2,6 +2,9 @@ package io.github.rexmtorres.android.composedatepicker.datepicker.data.model
 
 import io.github.rexmtorres.android.composedatepicker.extension.isEqual
 
+/**
+ * Specifies the range of dates that can be selected in [DatePicker][io.github.rexmtorres.android.composedatepicker.datepicker.DatePicker].
+ */
 class SelectionLimiter(
     private val fromDate: DatePickerDate? = null,
     private val toDate: DatePickerDate? = null

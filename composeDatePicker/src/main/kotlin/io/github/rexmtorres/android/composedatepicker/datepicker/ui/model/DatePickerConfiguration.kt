@@ -6,6 +6,35 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.DefaultDatePickerConfig
 
+/**
+ * Additional configurations for customizing the appearance of the date picker.
+ *
+ * Use [Builder] to create a builder instance and then call [Builder.build] to create the instance
+ * of this class.
+ *
+ * See [DefaultDatePickerConfig] for the default configurations.
+ *
+ * @property height The height of the date picker.
+ * @property headerHeight The height of the header of the date picker.
+ * @property headerTextStyle The text style of the header of the date picker.
+ * @property headerArrowSize The size of the arrow in the header of the date picker.
+ * @property headerArrowColor The color of the arrow in the header of the date picker.
+ * @property daysNameTextStyle The text style of the days of the week in the header of the date picker.
+ * @property dateTextStyle The text style of the dates in the date picker.
+ * @property selectedDateTextStyle The text style of the selected date in the date picker.
+ * @property sundayTextColor The color of the days of the week that fall on Sunday.
+ * @property disabledDateColor The color of the dates that are not selectable.
+ * @property selectedDateBackgroundSize The size of the indicator of the selected date in the date picker.
+ * @property selectedDateBackgroundColor The color of the indicator of the selected date in the date picker.
+ * @property selectedDateBackgroundShape The shape of the indicator of the selected date in the date picker.
+ * @property monthYearTextStyle The text style of the month and year in the header of the date picker.
+ * @property selectedMonthYearTextStyle The text style of the selected month and year of the date picker.
+ * @property selectedMonthYearScaleFactor The scale factor of the selected month and year of the date picker.
+ * @property numberOfMonthYearRowsDisplayed The number of rows displayed for the month and year selector of the date picker.
+ * @property selectedMonthYearAreaHeight The height of the area that contains the month and year selector of the date picker.
+ * @property selectedMonthYearAreaColor The color of the area that contains the month and year selector of the date picker.
+ * @property selectedMonthYearAreaShape The shape of the area that contains the month and year selector of the date picker.
+ */
 class DatePickerConfiguration private constructor(
     val height: Dp,
     val headerHeight: Dp,

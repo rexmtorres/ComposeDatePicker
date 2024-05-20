@@ -51,11 +51,11 @@ import io.github.rexmtorres.android.composedatepicker.R
 import io.github.rexmtorres.android.composedatepicker.component.AnimatedFadeVisibility
 import io.github.rexmtorres.android.composedatepicker.component.SwipeLazyColumn
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.Constant
+import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.DatePickerDate
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Month
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.SelectionLimiter
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.toDate
-import io.github.rexmtorres.android.composedatepicker.datepicker.data.Days
 import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerConfiguration
 import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerUiState
 import io.github.rexmtorres.android.composedatepicker.datepicker.ui.viewmodel.DatePickerViewModel
@@ -67,6 +67,18 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.math.ceil
 
+/**
+ * Composes a date picker.
+ *
+ * @param modifier [Modifier] to be applied to the date picker.
+ * @param date The initial date.
+ * @param selectionLimiter [SelectionLimiter] that indicates the range of selectable dates.
+ * @param configuration [DatePickerConfiguration] that controls the appearance of the date picker.
+ * @param id Unique identifier for the date picker.  This is important when displaying multiple
+ * date pickers in the same screen.
+ * @param locale The locale to use for displaying the month and day names.
+ * @param onDateSelected Callback invoked when a date is selected.
+ */
 @Composable
 fun DatePicker(
     modifier: Modifier = Modifier,
@@ -75,7 +87,7 @@ fun DatePicker(
     configuration: DatePickerConfiguration = DatePickerConfiguration.Builder().build(),
     id: Int = 1,
     locale: Locale = Locale.getDefault(),
-    onDateSelected: (year: Int, month: Int, day: Int) -> Unit,
+    onDateSelected: (DatePickerDate) -> Unit,
 ) {
     val viewModel: DatePickerViewModel = viewModel(key = "DatePickerViewModel$id")
     viewModel.setLocale(locale)
@@ -133,9 +145,11 @@ fun DatePicker(
                     onDaySelected = {
                         viewModel.updateSelectedDayAndMonth(it)
                         onDateSelected(
-                            uiState.selectedYear,
-                            uiState.selectedMonth.number,
-                            uiState.selectedDayOfMonth
+                            DatePickerDate(
+                                year = uiState.selectedYear,
+                                month = uiState.selectedMonth.number,
+                                day = uiState.selectedDayOfMonth
+                            )
                         )
                     },
                     configuration = configuration,
@@ -164,9 +178,11 @@ fun DatePicker(
     // Call onDateSelected when composition is completed
     LaunchedEffect(key1 = Unit) {
         onDateSelected(
-            uiState.selectedYear,
-            uiState.selectedMonth.number,
-            uiState.selectedDayOfMonth
+            DatePickerDate(
+                year = uiState.selectedYear,
+                month = uiState.selectedMonth.number,
+                day = uiState.selectedDayOfMonth
+            )
         )
     }
 }
@@ -613,12 +629,8 @@ fun PreviewDatePicker() {
                         fromDate = DatePickerDate.currentDate,
                         //toDate = DatePickerDate.currentDate.addDays(4)
                     ),
-                    onDateSelected = { year, month, day ->
-                        currentDate = DatePickerDate(
-                            year = year,
-                            month = month,
-                            day = day
-                        )
+                    onDateSelected = { date ->
+                        currentDate = date
                     }
                 )
             }
