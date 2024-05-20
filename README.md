@@ -2,7 +2,7 @@
 An Android Jetpack Compose library that provides a Composable Date Picker / Time Picker functionality.
 This is a fork of [vsnappy1/ComposeDatePicker](https://github.com/vsnappy1/composedatepicker)
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.rexmtorres.android/ComposeDatePicker.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.rexmtorres.android%22%20AND%20a:%ComposeDatePicker%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.rexmtorres.android/composedatepicker.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.rexmtorres.android/composedatepicker)
 
 ## Dependencies Setup
 ```kotlin
