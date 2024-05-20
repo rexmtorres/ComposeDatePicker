@@ -92,11 +92,13 @@ fun DatePicker(
     val viewModel: DatePickerViewModel = viewModel(key = "DatePickerViewModel$id")
     viewModel.setLocale(locale)
 
+    val initialYear = date.year
+
     val uiState by viewModel.uiState.observeAsState(
         DatePickerUiState(
             locale = locale,
-            selectedYear = date.year,
-            selectedMonth = Constant.getMonths(date.year, locale)[date.month],
+            selectedYear = initialYear,
+            selectedMonth = Constant.getMonths(initialYear, locale)[date.month],
             selectedDayOfMonth = date.day
         )
     )
@@ -136,6 +138,7 @@ fun DatePicker(
                 visible = !uiState.isMonthYearViewVisible
             ) {
                 DateView(
+                    currentYear = initialYear,
                     currentVisibleMonth = uiState.currentVisibleMonth,
                     selectedYear = uiState.selectedYear,
                     selectedMonth = uiState.selectedMonth,
@@ -163,9 +166,13 @@ fun DatePicker(
                 MonthAndYearView(
                     modifier = Modifier.align(Alignment.Center),
                     selectedMonth = uiState.selectedMonthIndex,
-                    onMonthChange = { viewModel.updateSelectedMonthIndex(it) },
+                    onMonthChange = {
+                        viewModel.updateSelectedMonthIndex(it)
+                    },
                     selectedYear = uiState.selectedYearIndex,
-                    onYearChange = { viewModel.updateSelectedYearIndex(it) },
+                    onYearChange = {
+                        viewModel.updateSelectedYearIndex(it)
+                    },
                     years = uiState.years,
                     months = uiState.months,
                     height = height,
@@ -214,6 +221,7 @@ private fun MonthAndYearView(
                     shape = configuration.selectedMonthYearAreaShape
                 )
         )
+
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
@@ -347,6 +355,7 @@ private fun SliderItem(
 
 @Composable
 private fun DateView(
+    currentYear: Int,
     selectedYear: Int,
     currentVisibleMonth: Month,
     selectedDayOfMonth: Int?,
@@ -392,6 +401,7 @@ private fun DateView(
 
             DateViewBodyItem(
                 value = it,
+                currentYear = currentYear,
                 currentVisibleMonth = currentVisibleMonth,
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
@@ -408,6 +418,7 @@ private fun DateView(
 @Composable
 private fun DateViewBodyItem(
     value: Int,
+    currentYear: Int,
     currentVisibleMonth: Month,
     selectedYear: Int,
     selectedMonth: Month,
@@ -429,7 +440,10 @@ private fun DateViewBodyItem(
             )
     ) {
         val day = value - currentVisibleMonth.firstDayOfMonth.number + 2
-        val isSelected = day == selectedDayOfMonth && selectedMonth == currentVisibleMonth
+
+        val isSelected = (selectedDayOfMonth == day) &&
+                (selectedMonth == currentVisibleMonth) &&
+                (selectedYear == currentYear)
         val isWithinRange = selectionLimiter.isWithinRange(
             DatePickerDate(
                 selectedYear,
