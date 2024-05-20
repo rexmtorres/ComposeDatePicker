@@ -8,7 +8,7 @@ This is a fork of [vsnappy1/ComposeDatePicker](https://github.com/vsnappy1/compo
 ```kotlin
 dependencies {
     //..
-    implementation("io.github.rexmtorres.android:composedatepicker:1.0.0")
+    implementation("io.github.rexmtorres.android:composedatepicker:1.0.1")
 }
 ```
 
