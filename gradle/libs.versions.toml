@@ -21,7 +21,7 @@ androidx-core-testing = "2.2.0"
 kotlinx-coroutines-test = "1.8.0"
 mockito = "4.4.0"
 
-gradle-maven-publish = "0.28.0"
+gradle-maven-publish = "0.29.0"
 jetbrains-dokka = "1.9.20"
 
 [libraries]
