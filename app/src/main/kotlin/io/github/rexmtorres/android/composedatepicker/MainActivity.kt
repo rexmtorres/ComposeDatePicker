@@ -25,12 +25,12 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Date
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.SelectionLimiter
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.toDate
 import io.github.rexmtorres.android.composedatepicker.timepicker.TimePicker
-import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.TimePickerTime
 import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.toDate
 import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
 import io.github.rexmtorres.android.composedatepicker.ui.theme.ComposeDatePickerTheme
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -69,6 +69,16 @@ private fun Content(modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
+    val now = Date()
+
+    val disabledDates = remember {
+        listOf(
+            DatePickerDate(now.year + 1900, now.month, 19),
+            DatePickerDate(now.year + 1900, now.month, 23),
+            DatePickerDate(now.year + 1900, now.month, 30),
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -77,9 +87,10 @@ private fun Content(modifier: Modifier = Modifier) {
 
         DatePicker(
             locale = Locale.CHINESE,
-            selectionLimiter = SelectionLimiter(
+            selectionLimiter = SelectionLimiter.fromDatePickerDates(
                 fromDate = DatePickerDate.currentDate,
                 //toDate = DatePickerDate.currentDate.addDays(4)
+                disabledDates = disabledDates
             ),
             onDateSelected = { date ->
                 selectedDate = dateFormatter.format(date.toDate(discardTime = true))

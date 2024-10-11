@@ -64,6 +64,7 @@ import io.github.rexmtorres.android.composedatepicker.extension.spToDp
 import io.github.rexmtorres.android.composedatepicker.extension.toDp
 import io.github.rexmtorres.android.composedatepicker.theme.Size.medium
 import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.Locale
 import kotlin.math.ceil
 
@@ -83,7 +84,7 @@ import kotlin.math.ceil
 fun DatePicker(
     modifier: Modifier = Modifier,
     date: DatePickerDate = DatePickerDate.currentDate,
-    selectionLimiter: SelectionLimiter = SelectionLimiter(),
+    selectionLimiter: SelectionLimiter = SelectionLimiter.unlimited(),
     configuration: DatePickerConfiguration = DatePickerConfiguration.Builder().build(),
     id: Int = 1,
     locale: Locale = Locale.getDefault(),
@@ -616,6 +617,16 @@ fun PreviewDatePicker() {
         mutableStateOf(DatePickerDate.currentDate)
     }
 
+    val now = Date()
+
+    val disabledDates = remember {
+        listOf(
+            DatePickerDate(now.year + 1900, now.month, 25),
+            DatePickerDate(now.year + 1900, now.month, now.day + 6),
+            DatePickerDate(now.year + 1900, now.month, now.day + 8),
+        )
+    }
+
     var confirmed by remember {
         mutableStateOf(false)
     }
@@ -639,9 +650,10 @@ fun PreviewDatePicker() {
                         //.selectedDateBackgroundShape(RoundedCornerShape(4.dp))
                         //.height(220.dp)
                         .build(),
-                    selectionLimiter = SelectionLimiter(
+                    selectionLimiter = SelectionLimiter.fromDatePickerDates(
                         fromDate = DatePickerDate.currentDate,
                         //toDate = DatePickerDate.currentDate.addDays(4)
+                        disabledDates = disabledDates
                     ),
                     onDateSelected = { date ->
                         currentDate = date
