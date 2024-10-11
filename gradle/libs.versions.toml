@@ -1,26 +1,24 @@
 [versions]
-agp = "8.4.0"
-kotlin = "1.9.24"
-ksp = "1.9.24-1.0.20" # Kotlin-KSP versions: https://github.com/google/ksp/releases
+agp = "8.7.0"
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.24" # Kotlin-KSP versions: https://github.com/google/ksp/releases
 
 androidx-core-ktx = "1.13.1"
-androidx-lifecycle-runtime-ktx = "2.8.0"
+androidx-lifecycle-runtime-ktx = "2.8.6"
 
-# Used in android.composeOptions.kotlinCompilerExtensionVersion
-compose-kotlin-compiler-extension = "1.5.14" # Compose-Kotlin mapping: https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-androidx-activity-compose = "1.9.0"
-androidx-compose-bom = "2024.05.00"
-androidx-lifecycle-viewmodel-compose = "2.8.0"
+androidx-activity-compose = "1.9.2"
+androidx-compose-bom = "2024.09.03"
+androidx-lifecycle-viewmodel-compose = "2.8.6"
 
-androidx-appcompat = "1.6.1"
+androidx-appcompat = "1.7.0"
 
 google-material = "1.12.0"
 
 junit = "4.13.2"
-androidx-junit = "1.1.5"
-androidx-espresso-core = "3.5.1"
+androidx-junit = "1.2.1"
+androidx-espresso-core = "3.6.1"
 androidx-core-testing = "2.2.0"
-kotlinx-coroutines-test = "1.7.3"
+kotlinx-coroutines-test = "1.8.0"
 mockito = "4.4.0"
 
 gradle-maven-publish = "0.28.0"
@@ -58,3 +56,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 android-library = { id = "com.android.library", version.ref = "agp" }
 gradle-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
 jetbrains-dokka = { id = "org.jetbrains.dokka", version.ref = "jetbrains-dokka" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

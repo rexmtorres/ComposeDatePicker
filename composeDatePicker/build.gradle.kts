@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gradle.maven.publish)
     alias(libs.plugins.jetbrains.dokka)
+    alias(libs.plugins.compose.compiler)
 }
 
 val jdkVersion = "17"
@@ -39,10 +40,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.kotlin.compiler.extension.get()
     }
 }
 
