@@ -8,7 +8,7 @@ This is a fork of [vsnappy1/ComposeDatePicker](https://github.com/vsnappy1/compo
 ```kotlin
 dependencies {
     //..
-    implementation("io.github.rexmtorres.android:composedatepicker:1.0.4")
+    implementation("io.github.rexmtorres.android:composedatepicker:1.0.5")
 }
 ```
 
@@ -72,16 +72,36 @@ DatePicker(
     onDateSelected = { year, month, day ->
 
     },
-    selectionLimiter = SelectionLimiter(
+    selectionLimiter = SelectionLimiter.fromDatePickerDates(
+        // Disable dates before 7 April 2023
         fromDate = DatePickerDate(
             year = 2023,
             month = Calendar.APRIL,
             day = 7
         ),
+        // Disable dates after 21 May 2023
         toDate = DatePickerDate(
             year = 2023,
             month = Calendar.MAY,
             day = 21
+        ),
+        // Disable these specific dates.
+        disabledDates = listOf(
+            DatePickerDate(
+                year = 2023,
+                month = Calendar.APRIL,
+                day = 16
+            ),
+            DatePickerDate(
+                year = 2023,
+                month = Calendar.APRIL,
+                day = 19
+            ),
+            DatePickerDate(
+                year = 2023,
+                month = Calendar.APRIL,
+                day = 29
+            )
         )
     )
 )
