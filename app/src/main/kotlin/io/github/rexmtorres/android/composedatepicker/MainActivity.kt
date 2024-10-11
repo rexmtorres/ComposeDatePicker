@@ -30,6 +30,7 @@ import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
 import io.github.rexmtorres.android.composedatepicker.ui.theme.ComposeDatePickerTheme
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -72,10 +73,17 @@ private fun Content(modifier: Modifier = Modifier) {
     val now = Date()
 
     val disabledDates = remember {
+        val calendar = Calendar.getInstance().apply {
+            time = now
+        }
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
         listOf(
-            DatePickerDate(now.year + 1900, now.month, 19),
-            DatePickerDate(now.year + 1900, now.month, 23),
-            DatePickerDate(now.year + 1900, now.month, 30),
+            DatePickerDate(year, month, day + 2),
+            DatePickerDate(year, month, day + 6),
+            DatePickerDate(year, month, day + 8),
         )
     }
 
@@ -93,7 +101,11 @@ private fun Content(modifier: Modifier = Modifier) {
                 disabledDates = disabledDates
             ),
             onDateSelected = { date ->
+                println("onDateSelected: date = $date")
                 selectedDate = dateFormatter.format(date.toDate(discardTime = true))
+            },
+            onMonthPageChange = { first, last ->
+                println("onMonthPageChange: first = $first | last = $last")
             }
         )
 

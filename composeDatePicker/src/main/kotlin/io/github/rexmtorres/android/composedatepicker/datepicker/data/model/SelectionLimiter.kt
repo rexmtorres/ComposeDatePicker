@@ -122,12 +122,7 @@ class SelectionLimiter private constructor(
 }
 
 private fun List<DatePickerDate>.containsElement(date: DatePickerDate): Boolean {
-    println("disabledDates: $this")
-    println("date: $date")
-
     return any { elem ->
-        println("elem: $elem")
-
         (elem.year == date.year) && (elem.month == date.month) && (elem.day == date.day)
     }
 }

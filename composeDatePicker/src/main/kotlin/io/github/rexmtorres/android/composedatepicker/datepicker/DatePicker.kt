@@ -64,6 +64,7 @@ import io.github.rexmtorres.android.composedatepicker.extension.spToDp
 import io.github.rexmtorres.android.composedatepicker.extension.toDp
 import io.github.rexmtorres.android.composedatepicker.theme.Size.medium
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.ceil
@@ -78,6 +79,8 @@ import kotlin.math.ceil
  * @param id Unique identifier for the date picker.  This is important when displaying multiple
  * date pickers in the same screen.
  * @param locale The locale to use for displaying the month and day names.
+ * @param onMonthPageChange Callback invoked when the month changes as a result of clicking on the
+ * previous/next month arrows or selecting the month/year from the header.
  * @param onDateSelected Callback invoked when a date is selected.
  */
 @Composable
@@ -88,7 +91,8 @@ fun DatePicker(
     configuration: DatePickerConfiguration = DatePickerConfiguration.Builder().build(),
     id: Int = 1,
     locale: Locale = Locale.getDefault(),
-    onDateSelected: (DatePickerDate) -> Unit,
+    onMonthPageChange: (firstDayOfMonth: DatePickerDate, lastDayOfMonth: DatePickerDate) -> Unit = { _, _ -> },
+    onDateSelected: (DatePickerDate) -> Unit
 ) {
     val viewModel: DatePickerViewModel = viewModel(key = "DatePickerViewModel$id")
     viewModel.setLocale(locale)
@@ -103,6 +107,24 @@ fun DatePicker(
             selectedDayOfMonth = date.day
         )
     )
+
+    LaunchedEffect(key1 = uiState.currentVisibleMonth, key2 = uiState.selectedYear) {
+        val month = uiState.currentVisibleMonth
+
+        val firstDayOfMonth = DatePickerDate(
+            year = uiState.selectedYear,
+            month = month.number,
+            day = 1
+        )
+
+        val lastDayOfMonth = DatePickerDate(
+            year = uiState.selectedYear,
+            month = month.number,
+            day = month.numberOfDays
+        )
+
+        onMonthPageChange(firstDayOfMonth, lastDayOfMonth)
+    }
 
     // Key is Unit because I want this to run only once not every time when is composable is recomposed.
     LaunchedEffect(key1 = Unit) { viewModel.setDate(date) }
@@ -123,7 +145,9 @@ fun DatePicker(
         CalendarHeader(
             title = "${uiState.currentVisibleMonth.name} ${uiState.selectedYear}",
             onMonthYearClick = { viewModel.toggleIsMonthYearViewVisible() },
-            onNextClick = { viewModel.moveToNextMonth() },
+            onNextClick = {
+                viewModel.moveToNextMonth()
+            },
             onPreviousClick = { viewModel.moveToPreviousMonth() },
             isPreviousNextVisible = !uiState.isMonthYearViewVisible,
             themeColor = configuration.selectedDateBackgroundColor,
@@ -139,7 +163,7 @@ fun DatePicker(
                 visible = !uiState.isMonthYearViewVisible
             ) {
                 DateView(
-                    currentYear = initialYear,
+                    currentYear = uiState.selectedYear, //initialYear,
                     currentVisibleMonth = uiState.currentVisibleMonth,
                     selectedYear = uiState.selectedYear,
                     selectedMonth = uiState.selectedMonth,
@@ -172,6 +196,8 @@ fun DatePicker(
                     },
                     selectedYear = uiState.selectedYearIndex,
                     onYearChange = {
+                        println("onYearChange: year = $it")
+
                         viewModel.updateSelectedYearIndex(it)
                     },
                     years = uiState.years,
@@ -620,10 +646,17 @@ fun PreviewDatePicker() {
     val now = Date()
 
     val disabledDates = remember {
+        val calendar = Calendar.getInstance().apply {
+            time = now
+        }
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
         listOf(
-            DatePickerDate(now.year + 1900, now.month, 25),
-            DatePickerDate(now.year + 1900, now.month, now.day + 6),
-            DatePickerDate(now.year + 1900, now.month, now.day + 8),
+            DatePickerDate(year, month, day + 2),
+            DatePickerDate(year, month, day + 6),
+            DatePickerDate(year, month, day + 8),
         )
     }
 
