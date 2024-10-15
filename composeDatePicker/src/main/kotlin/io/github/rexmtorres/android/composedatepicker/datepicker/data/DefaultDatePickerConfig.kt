@@ -8,7 +8,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import io.github.rexmtorres.android.composedatepicker.R
 import io.github.rexmtorres.android.composedatepicker.extension.noRippleClickable
 import io.github.rexmtorres.android.composedatepicker.theme.Size
+import io.github.rexmtorres.android.composedatepicker.theme.Size.extraLarge
+import io.github.rexmtorres.android.composedatepicker.theme.Size.large
 import io.github.rexmtorres.android.composedatepicker.theme.Size.medium
 import io.github.rexmtorres.android.composedatepicker.theme.black
 import io.github.rexmtorres.android.composedatepicker.theme.blue
@@ -41,6 +45,13 @@ object DefaultDatePickerConfig  {
         fontWeight = FontWeight.W700,
         color = black
     )
+    val monthYearHeader: @Composable (month: String, year: Int) -> Unit = { month, year ->
+        Text(
+            text = "$month $year",
+            modifier = Modifier
+                .padding(start = extraLarge)
+        )
+    }
     val previousArrow: @Composable () -> Unit = {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,

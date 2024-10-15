@@ -5,10 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.rexmtorres.android.composedatepicker.datepicker.DatePicker
@@ -25,6 +30,8 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.Date
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.SelectionLimiter
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.toDate
 import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerConfiguration
+import io.github.rexmtorres.android.composedatepicker.theme.Size
+import io.github.rexmtorres.android.composedatepicker.theme.Size.medium
 import io.github.rexmtorres.android.composedatepicker.timepicker.TimePicker
 import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.toDate
 import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
@@ -112,6 +119,24 @@ private fun Content(modifier: Modifier = Modifier) {
                 .Builder()
                 .uppercaseHeaderText(true)
                 .uppercaseDaysNameText(true)
+                .monthYearHeader { month, year ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(start = Size.extraLarge)
+                    ) {
+                        Text(
+                            text = "$month $year"
+                        )
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                            contentDescription = stringResource(id = R.string.rightArrow),
+                            modifier = Modifier
+                                .padding(start = medium)
+                        )
+                    }
+                }
                 .build()
         )
 

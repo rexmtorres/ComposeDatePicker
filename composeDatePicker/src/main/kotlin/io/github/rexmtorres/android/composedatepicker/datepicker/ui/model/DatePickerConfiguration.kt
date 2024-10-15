@@ -20,6 +20,7 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePi
  * @property headerHeight The height of the header of the date picker.
  * @property uppercaseHeaderText Whether to display the header text in uppercase.
  * @property headerTextStyle The text style of the header of the date picker.
+ * @property monthYearHeader The composable for the month and year header of the date picker.
  * @property previousArrow The composable for the previous arrow (&lt;) in the header of the date picker.
  * @property nextArrow The composable for the next arrow (&gt;) in the header of the date picker.
  * @property daysNameTextStyle The text style of the days of the week in the header of the date picker.
@@ -44,6 +45,7 @@ class DatePickerConfiguration private constructor(
     val headerHeight: Dp,
     val uppercaseHeaderText: Boolean,
     val headerTextStyle: TextStyle,
+    val monthYearHeader: @Composable (month: String, year: Int) -> Unit,
     val previousArrow: @Composable () -> Unit,
     val nextArrow: @Composable () -> Unit,
     val daysNameTextStyle: TextStyle,
@@ -68,6 +70,7 @@ class DatePickerConfiguration private constructor(
         private var headerHeight: Dp = DefaultDatePickerConfig.headerHeight
         private var uppercaseHeaderText: Boolean = DefaultDatePickerConfig.uppercaseHeaderText
         private var headerTextStyle: TextStyle = DefaultDatePickerConfig.headerTextStyle
+        private var monthYearHeader: @Composable (month: String, year: Int) -> Unit = DefaultDatePickerConfig.monthYearHeader
         private var previousArrow: @Composable () -> Unit = DefaultDatePickerConfig.previousArrow
         private var nextArrow: @Composable () -> Unit = DefaultDatePickerConfig.nextArrow
         private var daysNameTextStyle: TextStyle = DefaultDatePickerConfig.daysNameTextStyle
@@ -107,6 +110,9 @@ class DatePickerConfiguration private constructor(
 
         fun headerTextStyle(textStyle: TextStyle) =
             apply { this.headerTextStyle = textStyle }
+
+        fun monthYearHeader(header: @Composable (month: String, year: Int) -> Unit) =
+            apply { this.monthYearHeader = header }
 
         fun previousArrow(arrow: @Composable () -> Unit) =
             apply { this.previousArrow = arrow }
@@ -168,6 +174,7 @@ class DatePickerConfiguration private constructor(
                 headerHeight = headerHeight,
                 uppercaseHeaderText = uppercaseHeaderText,
                 headerTextStyle = headerTextStyle,
+                monthYearHeader = monthYearHeader,
                 previousArrow = previousArrow,
                 nextArrow = nextArrow,
                 daysNameTextStyle = daysNameTextStyle,

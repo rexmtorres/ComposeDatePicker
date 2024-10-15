@@ -20,12 +20,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,13 +39,11 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.rexmtorres.android.composedatepicker.R
 import io.github.rexmtorres.android.composedatepicker.component.AnimatedFadeVisibility
 import io.github.rexmtorres.android.composedatepicker.component.SwipeLazyColumn
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.Constant
@@ -144,7 +139,8 @@ fun DatePicker(
     ) {
         // TODO add sliding effect when next or previous arrow is pressed
         CalendarHeader(
-            title = "${uiState.currentVisibleMonth.name} ${uiState.selectedYear}",
+            month = uiState.currentVisibleMonth.name,
+            year = uiState.selectedYear,
             onMonthYearClick = { viewModel.toggleIsMonthYearViewVisible() },
             onNextClick = {
                 viewModel.moveToNextMonth()
@@ -582,7 +578,8 @@ private fun getTopPaddingForItem(
 @Composable
 private fun CalendarHeader(
     modifier: Modifier = Modifier,
-    title: String,
+    month: String,
+    year: Int,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onMonthYearClick: () -> Unit,
@@ -605,20 +602,26 @@ private fun CalendarHeader(
             label = "CalendarHeader.textColor"
         )
 
-        Text(
-            text = title.let {
-                if (configuration.uppercaseHeaderText) {
-                    it.uppercase()
-                } else {
-                    it
-                }
-            },
-            style = configuration.headerTextStyle.copy(color = textColor),
+        Box(
             modifier = modifier
-                .padding(start = medium)
                 .noRippleClickable { onMonthYearClick() }
                 .align(Alignment.CenterStart),
-        )
+        ) {
+            ProvideTextStyle(
+                value = configuration.headerTextStyle.copy(color = textColor)
+            ) {
+                configuration.monthYearHeader(
+                    month.let {
+                        if (configuration.uppercaseHeaderText) {
+                            it.uppercase()
+                        } else {
+                            it
+                        }
+                    },
+                    year
+                )
+            }
+        }
 
         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
             AnimatedFadeVisibility(visible = isPreviousNextVisible) {
