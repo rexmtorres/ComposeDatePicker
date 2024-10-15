@@ -122,8 +122,10 @@ DatePicker(
         .build()
 )
 ```
-In addition to **_dateTextStyle_**, **_selectedDateTextStyle_**, and **_selectedDateBackgroundColor_**, there are a total of 
-20 attributes available for users to customize the appearance of the date picker.
+In addition to **_dateTextStyle_**, **_selectedDateTextStyle_**, and **_selectedDateBackgroundColor_**,
+there are more than 20 attributes available for users to customize the appearance of the date picker,
+including setting custom Composables for the header (`DatePickerConfiguration.monthYearHeader`,
+`DatePickerConfiguration.previousArrow`, `DatePickerConfiguration.nextArrow`).
 
 #### Set the Locale
 ```kotlin
