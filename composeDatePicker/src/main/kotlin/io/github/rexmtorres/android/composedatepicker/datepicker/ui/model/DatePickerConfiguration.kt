@@ -1,10 +1,12 @@
 package io.github.rexmtorres.android.composedatepicker.datepicker.ui.model
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.DefaultDatePickerConfig
+import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerConfiguration.Builder
 
 /**
  * Additional configurations for customizing the appearance of the date picker.
@@ -16,10 +18,12 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.data.DefaultDat
  *
  * @property height The height of the date picker.
  * @property headerHeight The height of the header of the date picker.
+ * @property uppercaseHeaderText Whether to display the header text in uppercase.
  * @property headerTextStyle The text style of the header of the date picker.
- * @property headerArrowSize The size of the arrow in the header of the date picker.
- * @property headerArrowColor The color of the arrow in the header of the date picker.
+ * @property previousArrow The composable for the previous arrow (&lt;) in the header of the date picker.
+ * @property nextArrow The composable for the next arrow (&gt;) in the header of the date picker.
  * @property daysNameTextStyle The text style of the days of the week in the header of the date picker.
+ * @property uppercaseDaysNameText Whether to display the days of the week in uppercase.
  * @property dateTextStyle The text style of the dates in the date picker.
  * @property selectedDateTextStyle The text style of the selected date in the date picker.
  * @property sundayTextColor The color of the days of the week that fall on Sunday.
@@ -38,10 +42,12 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.data.DefaultDat
 class DatePickerConfiguration private constructor(
     val height: Dp,
     val headerHeight: Dp,
+    val uppercaseHeaderText: Boolean,
     val headerTextStyle: TextStyle,
-    val headerArrowSize: Dp,
-    val headerArrowColor: Color,
+    val previousArrow: @Composable () -> Unit,
+    val nextArrow: @Composable () -> Unit,
     val daysNameTextStyle: TextStyle,
+    val uppercaseDaysNameText: Boolean,
     val dateTextStyle: TextStyle,
     val selectedDateTextStyle: TextStyle,
     val sundayTextColor: Color,
@@ -60,10 +66,12 @@ class DatePickerConfiguration private constructor(
     class Builder {
         private var height: Dp = DefaultDatePickerConfig.height
         private var headerHeight: Dp = DefaultDatePickerConfig.headerHeight
+        private var uppercaseHeaderText: Boolean = DefaultDatePickerConfig.uppercaseHeaderText
         private var headerTextStyle: TextStyle = DefaultDatePickerConfig.headerTextStyle
-        private var headerArrowSize: Dp = DefaultDatePickerConfig.headerArrowSize
-        private var headerArrowColor: Color = DefaultDatePickerConfig.headerArrowColor
+        private var previousArrow: @Composable () -> Unit = DefaultDatePickerConfig.previousArrow
+        private var nextArrow: @Composable () -> Unit = DefaultDatePickerConfig.nextArrow
         private var daysNameTextStyle: TextStyle = DefaultDatePickerConfig.daysNameTextStyle
+        private var uppercaseDaysNameText: Boolean = DefaultDatePickerConfig.uppercaseDaysNameText
         private var dateTextStyle: TextStyle = DefaultDatePickerConfig.dateTextStyle
         private var selectedDateTextStyle: TextStyle = DefaultDatePickerConfig.selectedDateTextStyle
         private var sundayTextColor: Color = DefaultDatePickerConfig.sundayTextColor
@@ -94,17 +102,23 @@ class DatePickerConfiguration private constructor(
         fun headerHeight(height: Dp) =
             apply { this.headerHeight = height }
 
+        fun uppercaseHeaderText(capitalize: Boolean) =
+            apply { this.uppercaseHeaderText = capitalize }
+
         fun headerTextStyle(textStyle: TextStyle) =
             apply { this.headerTextStyle = textStyle }
 
-        fun headerArrowSize(size: Dp) =
-            apply { this.headerArrowSize = size }
+        fun previousArrow(arrow: @Composable () -> Unit) =
+            apply { this.previousArrow = arrow }
 
-        fun headerArrowColor(color: Color) =
-            apply { this.headerArrowColor = color }
+        fun nextArrow(arrow: @Composable () -> Unit) =
+            apply { this.nextArrow = arrow }
 
         fun daysNameTextStyle(textStyle: TextStyle) =
             apply { this.daysNameTextStyle = textStyle }
+
+        fun uppercaseDaysNameText(capitalize: Boolean) =
+            apply { this.uppercaseDaysNameText = capitalize }
 
         fun dateTextStyle(textStyle: TextStyle) =
             apply { this.dateTextStyle = textStyle }
@@ -152,10 +166,12 @@ class DatePickerConfiguration private constructor(
             return DatePickerConfiguration(
                 height = height,
                 headerHeight = headerHeight,
+                uppercaseHeaderText = uppercaseHeaderText,
                 headerTextStyle = headerTextStyle,
-                headerArrowSize = headerArrowSize,
-                headerArrowColor = headerArrowColor,
+                previousArrow = previousArrow,
+                nextArrow = nextArrow,
                 daysNameTextStyle = daysNameTextStyle,
+                uppercaseDaysNameText = uppercaseDaysNameText,
                 dateTextStyle = dateTextStyle,
                 selectedDateTextStyle = selectedDateTextStyle,
                 sundayTextColor = sundayTextColor,

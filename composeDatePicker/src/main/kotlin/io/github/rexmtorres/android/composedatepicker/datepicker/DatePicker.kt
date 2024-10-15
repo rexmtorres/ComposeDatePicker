@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -547,7 +548,13 @@ private fun DateViewHeaderItem(
             .size(configuration.selectedDateBackgroundSize)
     ) {
         Text(
-            text = day.shortName(locale),
+            text = day.shortName(locale).let {
+                if (configuration.uppercaseDaysNameText) {
+                    it.uppercase()
+                } else {
+                    it
+                }
+            },
             textAlign = TextAlign.Center,
             style = configuration.daysNameTextStyle.copy(
                 color = if (day.number == 1) {
@@ -599,7 +606,13 @@ private fun CalendarHeader(
         )
 
         Text(
-            text = title,
+            text = title.let {
+                if (configuration.uppercaseHeaderText) {
+                    it.uppercase()
+                } else {
+                    it
+                }
+            },
             style = configuration.headerTextStyle.copy(color = textColor),
             modifier = modifier
                 .padding(start = medium)
@@ -609,27 +622,25 @@ private fun CalendarHeader(
 
         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
             AnimatedFadeVisibility(visible = isPreviousNextVisible) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                    contentDescription = stringResource(id = R.string.leftArrow),
-                    tint = configuration.headerArrowColor,
+                Box(
                     modifier = Modifier
-                        .size(configuration.headerArrowSize)
+                        .wrapContentSize()
                         .noRippleClickable { onPreviousClick() }
-                )
+                ) {
+                    configuration.previousArrow()
+                }
             }
 
             Spacer(modifier = Modifier.width(medium))
 
             AnimatedFadeVisibility(visible = isPreviousNextVisible) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(id = R.string.rightArrow),
-                    tint = configuration.headerArrowColor,
+                Box(
                     modifier = Modifier
-                        .size(configuration.headerArrowSize)
+                        .wrapContentSize()
                         .noRippleClickable { onNextClick() }
-                )
+                ) {
+                    configuration.nextArrow()
+                }
             }
         }
     }

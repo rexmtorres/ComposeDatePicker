@@ -24,6 +24,7 @@ import io.github.rexmtorres.android.composedatepicker.datepicker.DatePicker
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.DatePickerDate
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.SelectionLimiter
 import io.github.rexmtorres.android.composedatepicker.datepicker.data.model.toDate
+import io.github.rexmtorres.android.composedatepicker.datepicker.ui.model.DatePickerConfiguration
 import io.github.rexmtorres.android.composedatepicker.timepicker.TimePicker
 import io.github.rexmtorres.android.composedatepicker.timepicker.data.model.toDate
 import io.github.rexmtorres.android.composedatepicker.timepicker.enums.MinuteGap
@@ -94,7 +95,7 @@ private fun Content(modifier: Modifier = Modifier) {
         Text(text = selectedDate)
 
         DatePicker(
-            locale = Locale.CHINESE,
+            locale = Locale.US,
             selectionLimiter = SelectionLimiter.fromDatePickerDates(
                 fromDate = DatePickerDate.currentDate,
                 //toDate = DatePickerDate.currentDate.addDays(4)
@@ -106,7 +107,12 @@ private fun Content(modifier: Modifier = Modifier) {
             },
             onMonthPageChange = { first, last ->
                 println("onMonthPageChange: first = $first | last = $last")
-            }
+            },
+            configuration = DatePickerConfiguration
+                .Builder()
+                .uppercaseHeaderText(true)
+                .uppercaseDaysNameText(true)
+                .build()
         )
 
         HorizontalDivider(
